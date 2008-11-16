@@ -5,9 +5,9 @@ use strict;
 use vars qw( $VERSION );
 BEGIN { eval { require warnings } ? 'warnings'->import : ( $^W = 1 ) }
 
-require NEXT;
+use Waft 0.9907 ();
 
-$VERSION = '0.00_01';
+$VERSION = '0.01';
 $VERSION = eval $VERSION;
 
 $Waft::jQuery::Name = 'Waft.jQuery';
@@ -18,7 +18,7 @@ sub convert_text_part {
     my @text_parts
         = split /\b \Q$Waft::jQuery::Name\E \. /xms, $text_part;
 
-    my $code = $self->NEXT::convert_text_part( shift(@text_parts), $break );
+    my $code = $self->next( shift(@text_parts), $break );
 
     while ( @text_parts ) {
         my $text_part = shift @text_parts;
@@ -32,7 +32,7 @@ sub convert_text_part {
             $code .= q{$Waft::Self->output_jquery_request_script('post');};
         }
 
-        $code .= $self->NEXT::convert_text_part($text_part, $break);
+        $code .= $self->next($text_part, $break);
     }
 
     return $code;
@@ -41,10 +41,10 @@ sub convert_text_part {
 sub output_jquery_request_script {
     my ($self, $method) = @_;
 
-    my $page = $self->jquery_escape($self->page);
+    my $page = $self->jsstr_escape($self->page);
     my $joined_values
-        = $self->jquery_escape( $self->join_values('ALL_VALUES') );
-    my $url = $self->jquery_escape($self->url);
+        = $self->jsstr_escape( $self->join_values('ALL_VALUES') );
+    my $url = $self->jsstr_escape($self->url);
 
     my $javascript = qq{( function (action, data, callback, type) {
         if ( jQuery.isFunction(data) ) {
@@ -71,18 +71,6 @@ sub output_jquery_request_script {
     return;
 }
 
-sub jquery_escape {
-    my ($self, $value) = @_;
-
-    $value =~ s/ (['"\\]) /\\$1/gxms;
-    $value =~ s/ \x0A /\\n/gxms;
-    $value =~ s/ \x0D /\\r/gxms;
-    $value =~ s/ < /\\x3C/gxms;
-    $value =~ s/ > /\\x3E/gxms;
-
-    return $value;
-}
-
 sub output_jquery_sync_script {
     my ($self) = @_;
 
@@ -95,7 +83,7 @@ sub make_jquery_sync_script {
     my ($self) = @_;
 
     my $joined_values
-        = $self->jquery_escape( $self->join_values('ALL_VALUES') );
+        = $self->jsstr_escape( $self->join_values('ALL_VALUES') );
     my $javascript
         = qq{jQuery('input:hidden[name=\\'v\\']').val('$joined_values');};
 
