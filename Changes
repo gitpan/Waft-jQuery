@@ -1,5 +1,8 @@
 Revision history for Perl extension Waft::jQuery.
 
+0.02  Thu Oct 29 22:09:09 2009
+    - fixed to work with latest Waft
+
 0.01  Sun Nov 16 04:56:17 2008
     - changed dispatcher from NEXT to Waft::next()
     - deleted method jquery_escape() and changed it to Waft::jsstr_escape()

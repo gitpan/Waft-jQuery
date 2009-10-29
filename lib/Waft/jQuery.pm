@@ -5,10 +5,9 @@ use strict;
 use vars qw( $VERSION );
 BEGIN { eval { require warnings } ? 'warnings'->import : ( $^W = 1 ) }
 
-use Waft 0.9907 ();
+use Waft 0.9910 ();
 
-$VERSION = '0.01';
-$VERSION = eval $VERSION;
+$VERSION = '0.02';
 
 $Waft::jQuery::Name = 'Waft.jQuery';
 
@@ -26,10 +25,10 @@ sub convert_text_part {
         ( my $method, $text_part ) = split / \b /xms, $text_part, 2;
 
         if ($method eq 'get') {
-            $code .= q{$Waft::Self->output_jquery_request_script('get');};
+            $code .= q{$__self->output_jquery_request_script('get');};
         }
         elsif ($method eq 'post') {
-            $code .= q{$Waft::Self->output_jquery_request_script('post');};
+            $code .= q{$__self->output_jquery_request_script('post');};
         }
 
         $code .= $self->next($text_part, $break);
@@ -207,7 +206,7 @@ Yuji Tamashiro, E<lt>yuji@tamashiro.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2008 by Yuji Tamashiro
+Copyright (C) 2008, 2009 by Yuji Tamashiro
 
 This library is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself.
